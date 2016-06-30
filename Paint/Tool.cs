@@ -28,7 +28,13 @@ namespace Paint
             args.panel1.Text = pt1.ToString();
             args.panel2.Text = pt2.ToString();
         }
-
+        protected void ShowPointInStatusBar(Point pt1, string whateverElse)
+        {
+            args.panel1.Text = pt1.ToString()+" "+whateverElse ;
+            
+            args.panel2.Text =  whateverElse;
+            
+        }
         protected Rectangle GetRectangleFromPoints(Point p1, Point p2)
         {
             Point oPoint;

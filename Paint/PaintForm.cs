@@ -67,6 +67,8 @@ namespace Paint
       Rectangle clipRect = e.ClipRectangle;
       Bitmap b = toolArgs.bitmap.Clone(clipRect, toolArgs.bitmap.PixelFormat);
       e.Graphics.DrawImageUnscaledAndClipped(b, clipRect);
+
+   
       b.Dispose();
     }
 
@@ -188,7 +190,7 @@ namespace Paint
         return brushImageBox.Image;
       }
     }
-
+    #region clicked events
     private void ColorBox_Click(object sender, EventArgs e) {
       PictureBox picBox = (PictureBox)sender;
       ColorDialog colorDlg = new ColorDialog();
@@ -283,19 +285,44 @@ namespace Paint
     private void fileExitMnu_Click(object sender, EventArgs e) {
       Application.Exit();
     }
-
+    #endregion
     private void ShowImage() {
       string t = imageFile.FileName;
+        
       Text = String.Format("Paint - [{0}]", t == null ? "Untitled" : new FileInfo(t).Name);
 
       imageBox.ClientSize = imageFile.Bitmap.Size;
       imageBox.Invalidate();
+      pointPanel1.Width = pointPanel1.Width * 2;
+      
       toolArgs = new ToolArgs(imageFile.Bitmap, imageBox, pointPanel1, pointPanel2, settings);
-
+        
       if (curTool != null)
         curTool.UnloadTool();
       curTool = new PointerTool(toolArgs);
       SetToolBarButtonsState(arrowBtn);
+    }
+    private static String HexConverter(System.Drawing.Color c)
+    {
+        return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+    }
+
+    private void imageBox_Click(object sender, EventArgs e)    
+    {
+        try
+        {
+            Point loc = ((System.Windows.Forms.MouseEventArgs)(e)).Location;
+            Color pixColor = imageFile.Bitmap.GetPixel(loc.X, loc.Y);
+
+
+            txtPixColor.Text = HexConverter(pixColor);
+        }
+        catch (Exception ex)
+        {
+            string s = ex.Message;
+            if (s.StartsWith("Unable to cast object of type 'System.EventArgs' to type 'System.Windows.Forms.MouseEventArgs"))
+                return;
+        }
     }
   }
 }

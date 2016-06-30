@@ -41,6 +41,12 @@ namespace Paint
       }
     }
 
+
+    private static String HexConverter(System.Drawing.Color c)
+    {
+        return "#" + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2");
+    }
+
     protected override void OnMouseMove(object sender, MouseEventArgs e) {
       curPoint = e.Location;
       if (drawing) {
@@ -52,7 +58,19 @@ namespace Paint
 
         prevRect = rect;
 
-        ShowPointInStatusBar(sPoint, e.Location);
+        Color pixColor =new Color();
+        try
+        {
+          Point loc = e.Location;
+
+          pixColor = args.bitmap.GetPixel(sPoint.X, sPoint.Y);
+         
+        }
+        catch (Exception ex)
+        { }
+        string sHexColor = HexConverter(pixColor);
+        ///////////////////
+            ShowPointInStatusBar(sPoint, sHexColor);
       } else {
         ShowPointInStatusBar(e.Location);
       }
